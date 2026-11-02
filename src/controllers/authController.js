@@ -52,13 +52,13 @@ export const login = async (req, res, next) => {
     }
 
     // Issue JWT in HttpOnly cookie
-    generateTokenAndSetCookie(res, user.id);
+    const token = generateTokenAndSetCookie(res, user.id);
 
     // Omit sensitive password hash from response
     const { password: _, ...userWithoutPassword } = user;
 
     return res.status(200).json(
-      new ApiResponse(200, userWithoutPassword, 'Authentication successful.')
+      new ApiResponse(200, { ...userWithoutPassword, token }, 'Authentication successful.')
     );
   } catch (error) {
     next(error);
